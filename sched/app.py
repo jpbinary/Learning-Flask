@@ -1,9 +1,11 @@
 from flask import Flask
+from flask import url_for
 
 # Create a python object named app that is a WSGI application.
 #   __name__ argument tells Flask to look in the current module (file) for resources
 app = Flask(__name__)
 
+# @app.route is python decorator. alternatively, you can use 'app.add_url_rule'
 # Set up function to handle requests to URL '/' (aka View functions)
 #   View functions return strings when requests made
 @app.route('/')
@@ -14,10 +16,18 @@ def hello():
 def appointment_list():
     return 'Listing of all appointments we have.'
 
+# <arguments> parsed as named arguments, which get passed to the view function
+#   <converter:argument>, to change from default converter of string to:
+#   int, float, or path
 @app.route('/appointments/<int:appointment_id>/')
 def appointment_detail(appointment_id):
-    return 'Detail of appointment #{}.'.format(appointment_id)
+    # url_for gets the url for the @app.route function parameter passed (aka endpoint)
+    edit_url = url_for('appointment_edit', appointment_id = appointment_id)
+    return edit_url
+    #return 'Detail of appointment #{}.'.format(appointment_id)
 
+# methods= is used to define the HTTP methods accepted for this route
+#   Valid methods are GET, POST, PUT, DELETE, HEAD, and OPTIONS
 @app.route('/appointments/<int:appointment_id>/edit/', methods=['GET', 'POST'])
 def appointment_edit(appointment_id):
     return 'Form to edit appointment #{}'.format(appointment_id)
