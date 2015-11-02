@@ -1,9 +1,12 @@
 '''
     Explore how Flask works. Debugging.
+    The flask.g object can be used to store information for the duration of a request.
 '''
 
 from flask import Flask, make_response
 from flask import request
+from flask import g
+import random
 
 app = Flask(__name__)
 
@@ -30,12 +33,16 @@ request.is_xhr: {request.is_xhr}
 @app.before_request
 def callme_before_every_request():
     # Demo only: the before_request hook.
+    x = random.randint(0,100)
     app.logger.debug(dump_request_detail(request))
+    app.logger.debug('before request: g.x is {x}'.format(x=x))
+    g.x = x
 
 @app.after_request
 def callme_after_every_response(response):
     # Demo only: the after_request hook.
     app.logger.debug('# After Request #\n' + repr(response))
+    app.logger.debug('after request: g.x is {g.x}'.format(g=g))
     return response
 
 #----------------------------------------------------------------------------------------------------------------------#
