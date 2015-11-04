@@ -1,11 +1,21 @@
 from flask import Flask
 from flask import url_for
 
+# needed for SQLAlchemy
+from flask.ext.sqlalchemy import SQLAlchemy
+from sched.models import Base
+
 # Written in Python 3.4.0
 
 # Create a python object named app that is a WSGI application.
 #   __name__ argument tells Flask to look in the current module (file) for resources
 app = Flask(__name__)
+
+# needed for SQLAlchemy
+#   Python supports SQLite out the box
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sched.db'
+db = SQLAlchemy(app)
+db.Model = Base
 
 # @app.route is python decorator. alternatively, you can use 'app.add_url_rule'
 # Set up function to handle requests to URL '/' (aka View functions)
